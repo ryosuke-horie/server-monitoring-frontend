@@ -12,6 +12,7 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import axios from 'axios';
 
 const defaultTheme = createTheme();
 
@@ -22,14 +23,23 @@ const defaultTheme = createTheme();
  * TODO: バリデーション作成
  */
 export default function SignUp() {
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
+
+    const res = await axios.post('http://54.199.212.225:3000/auth/signup', {
+      username: data.get('username'),
+      email: data.get('email'),
+      password: data.get('password'),
+    })
+
     console.log({
-      userName: data.get('userName'),
+      username: data.get('username'),
       email: data.get('email'),
       password: data.get('password'),
     });
+
+    console.log(res);
   };
 
   return (
@@ -55,10 +65,10 @@ export default function SignUp() {
               <Grid item xs={12} sm={12}>
                 <TextField
                   autoComplete="given-name"
-                  name="userName"
+                  name="username"
                   required
                   fullWidth
-                  id="userName"
+                  id="username"
                   label="氏名"
                   autoFocus
                 />
@@ -95,7 +105,7 @@ export default function SignUp() {
             </Button>
             <Grid container justifyContent="flex-end">
               <Grid item>
-                <Link href="#" variant="body2">
+                <Link href="signin" variant="body2">
                   Already have an account? Sign in
                 </Link>
               </Grid>
