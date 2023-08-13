@@ -15,6 +15,12 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 
 const defaultTheme = createTheme();
 
+/**
+ * サインアップページ
+ * @see https://mui.com/getting-started/templates/sign-up/
+ * TODO: Nest製バックエンドと連携する
+ * TODO: バリデーション作成
+ */
 export default function SignUp() {
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
