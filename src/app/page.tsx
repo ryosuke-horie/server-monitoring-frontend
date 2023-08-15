@@ -3,9 +3,22 @@
 import React from 'react';
 import { useState } from 'react';
 
-// TODO: anyの部分を型定義する
+/**
+ * アクセストークンの有無をチェックする
+ * アクセストークンがない場合はサインインページにリダイレクトする
+ */
+const getAccessToken = () => {
+  const accessToken = localStorage.getItem('accessToken');
+  if (!accessToken) {
+    window.location.href = '/signin';
+  }
+}
 
+// TODO: anyの部分を型定義する
 export default function MonitoringForm() {
+  // accessTokenを取得する
+  const accessToken = getAccessToken();
+
   const currentDate = new Date();
   const formattedDate = `${currentDate.getFullYear()}/${String(currentDate.getMonth() + 1).padStart(2, '0')}/${String(currentDate.getDate()).padStart(2, '0')}`;
 
@@ -63,13 +76,6 @@ export default function MonitoringForm() {
       { target_name: "グループセッション", target_ip: "192.168.20.32", is_working: checkboxes.example4.visual, is_backup_completed: checkboxes.example4.backup, is_not_alert:checkboxes.example4.zabbix, created_at: isoString, updated_at: isoString, record_date: date },
       { target_name: "券売機プロ", target_ip: "192.168.20.32", is_working: checkboxes.example5.visual, is_backup_completed: checkboxes.example5.backup, is_not_alert: checkboxes.example5.zabbix, created_at: isoString, updated_at: isoString, record_date: date },
     ];
-
-    // ローカルストレージからaccess_tokenを取得
-    const accessToken = localStorage.getItem('accessToken');
-    if (!accessToken) {
-      console.error("No access token found in local storage");
-      return;
-    }
 
     // x-www-form-urlencoded形式でエンコードする関数
     const formUrlEncode = (obj) => Object.keys(obj)
