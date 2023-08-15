@@ -1,5 +1,6 @@
 'use client'
 
+import React from 'react';
 import { useState } from 'react';
 
 // TODO: 画面上部の日付と同期させた監視対象日のデータをPOSTする。（バックエンド実行後）
