@@ -5,7 +5,7 @@ import { useState } from 'react';
 
 // TODO: anyの部分を型定義する
 
-export default function MyForm() {
+export default function MonitoringForm() {
   const currentDate = new Date();
   const formattedDate = `${currentDate.getFullYear()}/${String(currentDate.getMonth() + 1).padStart(2, '0')}/${String(currentDate.getDate()).padStart(2, '0')}`;
 
@@ -50,15 +50,6 @@ export default function MyForm() {
 
     setCheckboxes(updatedCheckboxes);
   };
-
-  // textarea の入力値を管理する state
-  const [reportItems, setReportItems] = useState({
-    example1: '',
-    example2: '',
-    example3: '',
-    example4: '',
-    example5: '',
-  });
 
   const submitData = async () => {
     const currentDate = new Date();
@@ -130,7 +121,6 @@ export default function MyForm() {
             <th>目視確認</th>
             <th>Zabbix</th>
             <th>Backup</th>
-            <th>報告事項</th>
           </tr>
         </thead>
         <tbody>
@@ -139,35 +129,30 @@ export default function MyForm() {
             <td><input type="checkbox" checked={checkboxes.example1.visual} onChange={(e) => setCheckboxes(prev => ({ ...prev, example1: { ...prev.example1, visual: e.target.checked } }))} /></td>
             <td><input type="checkbox" checked={checkboxes.example1.zabbix} onChange={(e) => setCheckboxes(prev => ({ ...prev, example1: { ...prev.example1, zabbix: e.target.checked } }))} /></td>
             <td><input type="checkbox" checked={checkboxes.example1.backup} onChange={(e) => setCheckboxes(prev => ({ ...prev, example1: { ...prev.example1, backup: e.target.checked } }))} /></td>
-            <td><textarea value={reportItems.example1} onChange={(e) => setReportItems(prev => ({ ...prev, example1: e.target.value }))} /></td>
           </tr>
           <tr>
             <td>券売機</td>
             <td><input type="checkbox" checked={checkboxes.example2.visual} onChange={(e) => setCheckboxes(prev => ({ ...prev, example2: { ...prev.example2, visual: e.target.checked } }))} /></td>
             <td><input type="checkbox" checked={checkboxes.example2.zabbix} onChange={(e) => setCheckboxes(prev => ({ ...prev, example2: { ...prev.example2, zabbix: e.target.checked } }))} /></td>
             <td><input type="checkbox" checked={checkboxes.example2.backup} onChange={(e) => setCheckboxes(prev => ({ ...prev, example2: { ...prev.example2, backup: e.target.checked } }))} /></td>
-            <td><textarea value={reportItems.example2} onChange={(e) => setReportItems(prev => ({ ...prev, example2: e.target.value }))} /></td>
           </tr>
           <tr>
             <td>エフ・エス</td>
             <td><input type="checkbox" checked={checkboxes.example3.visual} onChange={(e) => setCheckboxes(prev => ({ ...prev, example3: { ...prev.example3, visual: e.target.checked } }))} /></td>
             <td><input type="checkbox" checked={checkboxes.example3.zabbix} onChange={(e) => setCheckboxes(prev => ({ ...prev, example3: { ...prev.example3, zabbix: e.target.checked } }))} /></td>
             <td><input type="checkbox" checked={checkboxes.example3.backup} onChange={(e) => setCheckboxes(prev => ({ ...prev, example3: { ...prev.example3, backup: e.target.checked } }))} /></td>
-            <td><textarea value={reportItems.example3} onChange={(e) => setReportItems(prev => ({ ...prev, example3: e.target.value }))} /></td>
           </tr>
           <tr>
             <td>グループセッション</td>
             <td><input type="checkbox" checked={checkboxes.example4.visual} onChange={(e) => setCheckboxes(prev => ({ ...prev, example4: { ...prev.example4, visual: e.target.checked } }))} /></td>
             <td><input type="checkbox" checked={checkboxes.example4.zabbix} onChange={(e) => setCheckboxes(prev => ({ ...prev, example4: { ...prev.example4, zabbix: e.target.checked } }))} /></td>
             <td><input type="checkbox" checked={checkboxes.example4.backup} onChange={(e) => setCheckboxes(prev => ({ ...prev, example4: { ...prev.example4, backup: e.target.checked } }))} /></td>
-            <td><textarea value={reportItems.example4} onChange={(e) => setReportItems(prev => ({ ...prev, example4: e.target.value }))} /></td>
           </tr>
           <tr>
             <td>券売機プロ</td>
             <td><input type="checkbox" checked={checkboxes.example5.visual} onChange={(e) => setCheckboxes(prev => ({ ...prev, example5: { ...prev.example5, visual: e.target.checked } }))} /></td>
             <td><input type="checkbox" checked={checkboxes.example5.zabbix} onChange={(e) => setCheckboxes(prev => ({ ...prev, example5: { ...prev.example5, zabbix: e.target.checked } }))} /></td>
             <td><input type="checkbox" checked={checkboxes.example5.backup} onChange={(e) => setCheckboxes(prev => ({ ...prev, example5: { ...prev.example5, backup: e.target.checked } }))} /></td>
-            <td><textarea value={reportItems.example5} onChange={(e) => setReportItems(prev => ({ ...prev, example5: e.target.value }))} /></td>
           </tr>
         </tbody>
       </table>
@@ -190,27 +175,13 @@ export default function MyForm() {
                 width: 100%;
                 border-collapse: collapse;
               }
-              
               th, td {
                 border: 1px solid black;
                 padding: 2px;
                 text-align: center;
               }
-              
-              th:nth-child(5), td:nth-child(5) {  // 5番目のセルに適用
-                width: 50%;  // 必要に応じて値を調整してください
-              }
-              
-              textarea {
-                width: 100%;
-                height: 100%;
-                padding: 5px; 
-                border: 1px solid #ccc;
-                box-sizing: border-box;
-                resize: none;  // ユーザーがテキストエリアのサイズを変更しないようにする
-              }
               input[type="checkbox"] {
-                transform: scale(2.5);
+                transform: scale(2.0);
                 margin: 5px;
               }
             `}</style>
