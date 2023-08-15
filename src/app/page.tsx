@@ -1,23 +1,20 @@
 'use client'
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useState } from 'react';
-
-/**
- * アクセストークンの有無をチェックする
- * アクセストークンがない場合はサインインページにリダイレクトする
- */
-const getAccessToken = () => {
-  const accessToken = localStorage.getItem('accessToken');
-  if (!accessToken) {
-    window.location.href = '/signin';
-  }
-}
 
 // TODO: anyの部分を型定義する
 export default function MonitoringForm() {
-  // accessTokenを取得する
-  const accessToken = getAccessToken();
+  const [accessToken, setAccessToken] = useState(null);
+
+  useEffect(() => {
+  const token = localStorage.getItem('accessToken');
+  setAccessToken(token);
+
+  if (!token) {
+    window.location.href = '/signin';
+  }
+}, []);
 
   const currentDate = new Date();
   const formattedDate = `${currentDate.getFullYear()}/${String(currentDate.getMonth() + 1).padStart(2, '0')}/${String(currentDate.getDate()).padStart(2, '0')}`;
