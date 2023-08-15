@@ -22,7 +22,7 @@ export default function SignIn() {
     const data = new FormData(event.currentTarget);
 
     const res = await axios.post('http://54.199.212.225:3000/auth/signin', {
-        username: data.get('username'),
+        email: data.get('email'),
         password: data.get('password'),
     });
 
@@ -61,10 +61,10 @@ export default function SignIn() {
               margin="normal"
               required
               fullWidth
-              id="username"
-              label="ユーザー名"
-              name="username"
-              autoComplete="username"
+              id="email"
+              label="メールアドレス"
+              name="email"
+              autoComplete="email"
               autoFocus
             />
             <TextField
