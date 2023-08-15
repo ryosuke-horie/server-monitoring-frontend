@@ -35,7 +35,6 @@ export default function MonitoringForm() {
     setDate(`${prevDate.getFullYear()}/${String(prevDate.getMonth() + 1).padStart(2, '0')}/${String(prevDate.getDate()).padStart(2, '0')}`);
   }
 
-
   // 各チェックボックスの選択状態を管理する state
   const [checkboxes, setCheckboxes] = useState({
     example1: { visual: false, zabbix: false, backup: false },
@@ -109,7 +108,7 @@ export default function MonitoringForm() {
 
 
   return (
-    <div>
+    <div className='body-wrapper'>
       <div className="header">
         <button onClick={decrementDate}>＜</button>
         <span className="date-header">{date}</span>
@@ -160,11 +159,16 @@ export default function MonitoringForm() {
         </tbody>
       </table>
       <style jsx>{`
+              .body-wrapper {
+                margin-right: 20px;
+                margin-left:20px;
+              }
               .header {
                   display: flex;
                   justify-content: space-between;
                   align-items: center;
                   margin-bottom: 20px;
+                  margin-top: 10px;
               }
               .date-header {
                   font-size: 1.5em;
