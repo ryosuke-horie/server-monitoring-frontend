@@ -93,12 +93,15 @@ export default function MonitoringForm() {
         if (response.status === 201) { // 成功時のステータスコードを201としてチェック
           const data = await response.json();
           console.log(data);
+          alert(`送信に成功しました。`);
         } else {
           const errorData = await response.json();
           console.error(`Error: ${response.statusText}`);
           console.error(errorData);
+          alert(`送信に失敗しました。${response.statusText}`);
         }
       } catch (error) {
+        alert(`送信に失敗しました。${error}`);
         console.error("There was an error submitting the data", error);
       }
     };
