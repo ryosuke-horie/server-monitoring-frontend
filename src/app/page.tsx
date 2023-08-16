@@ -80,7 +80,6 @@ export default function MonitoringForm() {
 
     // 各行のデータを1件ずつPOSTする
     for (const payload of rows) {
-      console.log(payload);
       try {
         const response = await fetch('http://54.199.212.225:3000/monitoring', {
           method: 'POST',
@@ -103,7 +102,6 @@ export default function MonitoringForm() {
         console.error("There was an error submitting the data", error);
       }
     };
-
   };
 
 

@@ -11,8 +11,11 @@ export default function Header() {
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static">
         <Toolbar>
-          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+          <Typography variant="h2" component="div" sx={{ flexGrow: 1 }}>
             サーバー監視効率化ツール
+          </Typography>
+          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+            <Link href="/report_list">月別監視記録レポート一覧</Link>
           </Typography>
           <Button color="inherit"><Link href="/signin">SignIn</Link></Button>
           <Button color="inherit"><Link href="/signup">SignUp</Link></Button>
