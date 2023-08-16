@@ -20,8 +20,12 @@ export default function Header() {
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
             <Link href="/report_list">月別監視記録レポート一覧</Link>
           </Typography>
-          <Button color="inherit"><Link href="/signin">SignIn</Link></Button>
-          <Button color="inherit"><Link href="/signup">SignUp</Link></Button>
+          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+            <Link href="/signin">SignIn</Link>
+          </Typography>
+          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+            <Link href="/report_list">signup</Link>
+          </Typography>
         </Toolbar>
       </AppBar>
     </Box>

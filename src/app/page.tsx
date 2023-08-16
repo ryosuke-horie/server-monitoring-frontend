@@ -68,7 +68,7 @@ export default function MonitoringForm() {
     const rows = [
       { target_name: "パチンコビスタ", target_ip: "192.168.20.32", is_working: checkboxes.example1.visual, is_backup_completed: checkboxes.example1.backup, is_not_alert: checkboxes.example1.zabbix, created_at: isoString, updated_at: isoString, record_date: date },
       { target_name: "券売機", target_ip: "192.168.20.32", is_working: checkboxes.example2.visual, is_backup_completed: checkboxes.example2.backup, is_not_alert: checkboxes.example2.zabbix, created_at: isoString, updated_at: isoString, record_date: date },
-      { target_name: "エフ・エス", target_ip: "192.168.20.32", is_working: checkboxes.example3.visual, is_backup_completed: checkboxes.example3.backup, is_not_alert: checkboxes.example3.zabbix, created_at: isoString, updated_at: isoString, record_date: date },
+      { target_name: "エフエス", target_ip: "192.168.20.32", is_working: checkboxes.example3.visual, is_backup_completed: checkboxes.example3.backup, is_not_alert: checkboxes.example3.zabbix, created_at: isoString, updated_at: isoString, record_date: date },
       { target_name: "グループセッション", target_ip: "192.168.20.32", is_working: checkboxes.example4.visual, is_backup_completed: checkboxes.example4.backup, is_not_alert: checkboxes.example4.zabbix, created_at: isoString, updated_at: isoString, record_date: date },
       { target_name: "券売機プロ", target_ip: "192.168.20.32", is_working: checkboxes.example5.visual, is_backup_completed: checkboxes.example5.backup, is_not_alert: checkboxes.example5.zabbix, created_at: isoString, updated_at: isoString, record_date: date },
     ];
