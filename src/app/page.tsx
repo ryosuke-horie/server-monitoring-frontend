@@ -8,13 +8,13 @@ export default function MonitoringForm() {
   const [accessToken, setAccessToken] = useState(null);
 
   useEffect(() => {
-  const token = localStorage.getItem('accessToken');
-  setAccessToken(token);
+    const token = localStorage.getItem('accessToken');
+    setAccessToken(token);
 
-  if (!token) {
-    window.location.href = '/signin';
-  }
-}, []);
+    if (!token) {
+      window.location.href = '/signin';
+    }
+  }, []);
 
   const currentDate = new Date();
   const formattedDate = `${currentDate.getFullYear()}/${String(currentDate.getMonth() + 1).padStart(2, '0')}/${String(currentDate.getDate()).padStart(2, '0')}`;
@@ -69,14 +69,14 @@ export default function MonitoringForm() {
       { target_name: "パチンコビスタ", target_ip: "192.168.20.32", is_working: checkboxes.example1.visual, is_backup_completed: checkboxes.example1.backup, is_not_alert: checkboxes.example1.zabbix, created_at: isoString, updated_at: isoString, record_date: date },
       { target_name: "券売機", target_ip: "192.168.20.32", is_working: checkboxes.example2.visual, is_backup_completed: checkboxes.example2.backup, is_not_alert: checkboxes.example2.zabbix, created_at: isoString, updated_at: isoString, record_date: date },
       { target_name: "エフ・エス", target_ip: "192.168.20.32", is_working: checkboxes.example3.visual, is_backup_completed: checkboxes.example3.backup, is_not_alert: checkboxes.example3.zabbix, created_at: isoString, updated_at: isoString, record_date: date },
-      { target_name: "グループセッション", target_ip: "192.168.20.32", is_working: checkboxes.example4.visual, is_backup_completed: checkboxes.example4.backup, is_not_alert:checkboxes.example4.zabbix, created_at: isoString, updated_at: isoString, record_date: date },
+      { target_name: "グループセッション", target_ip: "192.168.20.32", is_working: checkboxes.example4.visual, is_backup_completed: checkboxes.example4.backup, is_not_alert: checkboxes.example4.zabbix, created_at: isoString, updated_at: isoString, record_date: date },
       { target_name: "券売機プロ", target_ip: "192.168.20.32", is_working: checkboxes.example5.visual, is_backup_completed: checkboxes.example5.backup, is_not_alert: checkboxes.example5.zabbix, created_at: isoString, updated_at: isoString, record_date: date },
     ];
 
     // x-www-form-urlencoded形式でエンコードする関数
     const formUrlEncode = (obj) => Object.keys(obj)
-      .map(k => `${encodeURIComponent(k)}=${encodeURIComponent(obj[k])}`)
-      .join('&');
+    .map(k => `${encodeURIComponent(k)}=${encodeURIComponent(obj[k] === true ? "true" : obj[k] === false ? "false" : obj[k])}`)
+    .join('&');
 
     // 各行のデータを1件ずつPOSTする
     for (const payload of rows) {
@@ -103,7 +103,6 @@ export default function MonitoringForm() {
       }
     };
   };
-
 
   return (
     <div className='body-wrapper'>
