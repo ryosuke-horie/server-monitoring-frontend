@@ -26,8 +26,6 @@ export default function ReportDetailPage() {
       // 例：http://54.199.212.225:3000/monthly-report/?dateYear=202308
       const apiUrl = 'http://54.199.212.225:3000/monthly-report/?dateYear=' + dateYear;
 
-      console.log(apiUrl)
-
       try {
         const response = await fetch(apiUrl, {
           method: 'GET',
@@ -46,8 +44,6 @@ export default function ReportDetailPage() {
 
     getReportData();
   }, [dateYear, accessToken]);
-
-  // console.log(reportData);
 
   return (
     <>
