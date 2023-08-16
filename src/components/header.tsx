@@ -15,6 +15,9 @@ export default function Header() {
             サーバー監視効率化ツール
           </Typography>
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+            <Link href="/">サーバー監視記録ページ</Link>
+          </Typography>
+          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
             <Link href="/report_list">月別監視記録レポート一覧</Link>
           </Typography>
           <Button color="inherit"><Link href="/signin">SignIn</Link></Button>
