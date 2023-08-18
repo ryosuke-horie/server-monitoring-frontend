@@ -5,7 +5,9 @@ type ServerRecord = {
     is_not_alert: boolean;
     is_working: boolean;
     record_date: string;
-    userId: string;
+    user: {
+      username: string;
+    };
   };
   
   type ServerData = {
@@ -40,7 +42,7 @@ export default function ReportTable({ data }: DataTableProps) {
                 <th>Not Alert</th>
                 <th>Working</th>
                 <th>Record Date</th>
-                <th>User ID</th>
+                <th>User Name</th>
               </tr>
             </thead>
             <tbody>
@@ -51,7 +53,7 @@ export default function ReportTable({ data }: DataTableProps) {
                     <td>{record.is_not_alert ? 'Yes' : 'No'}</td>
                     <td>{record.is_working ? 'Yes' : 'No'}</td>
                     <td>{record.record_date}</td>
-                    <td>{record.userId}</td>
+                    <td>{record.user.username}</td>
                   </tr>
                 ))
               ) : (
