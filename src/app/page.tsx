@@ -7,6 +7,11 @@ import { useState } from 'react';
 export default function MonitoringForm() {
   const [accessToken, setAccessToken] = useState(null);
 
+  const currentDate = new Date();
+  const formattedDate = `${currentDate.getFullYear()}/${String(currentDate.getMonth() + 1).padStart(2, '0')}/${String(currentDate.getDate()).padStart(2, '0')}`;
+
+  const [date, setDate] = useState(formattedDate);
+
   useEffect(() => {
     const token = localStorage.getItem('accessToken');
     setAccessToken(token);
@@ -14,12 +19,71 @@ export default function MonitoringForm() {
     if (!token) {
       window.location.href = '/signin';
     }
+
+    // チェックボックスの初期値を取得する関数
+    const fetchInitialCheckboxValues = async () => {
+      try {
+        const response = await fetch(`http://54.199.212.225:3000/monitoring?date=${date}`, {
+          method: 'GET',
+          headers: {
+            'Authorization': `Bearer ${token}`
+          },
+        });
+
+        const data = await response.json();
+
+        // フェッチしたデータを元にcheckboxes stateを更新
+        const updatedCheckboxes = { ...checkboxes }; // 現在のcheckboxesのコピー
+
+        data.forEach(item => {
+          switch (item.target_name) {
+            case "パチンコビスタ":
+              updatedCheckboxes.example1 = {
+                visual: item.is_working === "true",
+                zabbix: item.is_not_alert === "true",
+                backup: item.is_backup_completed === "true"
+              };
+              break;
+            case "券売機":
+              updatedCheckboxes.example2 = {
+                visual: item.is_working === "true",
+                zabbix: item.is_not_alert === "true",
+                backup: item.is_backup_completed === "true"
+              };
+            case "エフエス":
+              updatedCheckboxes.example3 = {
+                visual: item.is_working === "true",
+                zabbix: item.is_not_alert === "true",
+                backup: item.is_backup_completed === "true"
+              };
+              break;
+            case "グループセッション":
+              updatedCheckboxes.example4 = {
+                visual: item.is_working === "true",
+                zabbix: item.is_not_alert === "true",
+                backup: item.is_backup_completed === "true"
+              };
+              break;
+            case "券売機プロ":
+              updatedCheckboxes.example5 = {
+                visual: item.is_working === "true",
+                zabbix: item.is_not_alert === "true",
+                backup: item.is_backup_completed === "true"
+              };
+              break;
+            default:
+              break;
+          }
+        });
+
+        setCheckboxes(updatedCheckboxes);
+      } catch (error) {
+        console.error("Error fetching initial checkbox values:", error);
+      }
+    };
+
+    fetchInitialCheckboxValues(); // 関数の実行
   }, []);
-
-  const currentDate = new Date();
-  const formattedDate = `${currentDate.getFullYear()}/${String(currentDate.getMonth() + 1).padStart(2, '0')}/${String(currentDate.getDate()).padStart(2, '0')}`;
-
-  const [date, setDate] = useState(formattedDate);
 
   // 日付を1日進める関数
   const incrementDate = () => {
