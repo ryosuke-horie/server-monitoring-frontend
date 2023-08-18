@@ -1,23 +1,23 @@
 import React from 'react';
 
 type ServerRecord = {
-    is_backup_completed: boolean;
-    is_not_alert: boolean;
-    is_working: boolean;
-    record_date: string;
-    user: {
-      username: string;
-    };
+  is_backup_completed: boolean;
+  is_not_alert: boolean;
+  is_working: boolean;
+  record_date: string;
+  user: {
+    username: string;
   };
-  
-  type ServerData = {
-    [serverName: string]: ServerRecord[];
-  };
+};
 
-  interface DataTableProps {
-    data: ServerData;
-  }
-  
+type ServerData = {
+  [serverName: string]: ServerRecord[];
+};
+
+interface DataTableProps {
+  data: ServerData;
+}
+
 
 // 前提として、データは以下の形式でpropsとして渡される
 // data = {
@@ -31,42 +31,43 @@ export default function ReportTable({ data }: DataTableProps) {
 
   return (
     <>
-    <div>
-      {Object.entries(data).map(([server, records]) => (
-        <div key={server}>
-          <h2>{server}</h2>
-          <table>
-            <thead>
-              <tr>
-                <th>Backup Completed</th>
-                <th>Not Alert</th>
-                <th>Working</th>
-                <th>Record Date</th>
-                <th>User Name</th>
-              </tr>
-            </thead>
-            <tbody>
-              {records.length > 0 ? (
-                records.map((record, idx) => (
-                  <tr key={idx}>
-                    <td>{record.is_backup_completed ? 'Yes' : 'No'}</td>
-                    <td>{record.is_not_alert ? 'Yes' : 'No'}</td>
-                    <td>{record.is_working ? 'Yes' : 'No'}</td>
-                    <td>{record.record_date}</td>
-                    <td>{record.user.username}</td>
-                  </tr>
-                ))
-              ) : (
+      <div>
+        {Object.entries(data).map(([server, records]) => (
+          <div key={server}>
+            <h2>{server}</h2>
+            <table>
+              <thead>
                 <tr>
-                  <td colSpan={5}>No Data</td>
+                  <th>日時</th>
+                  <th>バックアップ</th>
+                  <th>Zabbixアラート</th>
+                  <th>目視</th>
+                  <th>担当者</th>
                 </tr>
-              )}
-            </tbody>
-          </table>
-        </div>
-      ))}
-    </div>
-    <style jsx>{`
+              </thead>
+              <tbody>
+                {records.length > 0 ? (
+                  records.map((record, idx) => (
+                    <tr key={idx}>
+                      <td>{record.record_date}</td>
+
+                      <td>{record.is_backup_completed ? 'Yes' : 'No'}</td>
+                      <td>{record.is_not_alert ? 'Yes' : 'No'}</td>
+                      <td>{record.is_working ? 'Yes' : 'No'}</td>
+                      <td>{record.user.username}</td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan={5}>No Data</td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
+        ))}
+      </div>
+      <style jsx>{`
     .body-wrapper {
       margin-right: 20px;
       margin-left:20px;
@@ -121,6 +122,6 @@ export default function ReportTable({ data }: DataTableProps) {
       margin: 5px;
     }
   `}</style>
-</>  
+    </>
   );
 }
