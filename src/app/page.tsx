@@ -189,7 +189,6 @@ export default function MonitoringForm() {
               }
               input[type="checkbox"] {
                 transform: scale(2.0);
-                margin: 5px;
               }
             `}</style>
     </div>
