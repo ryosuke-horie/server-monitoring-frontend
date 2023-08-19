@@ -5,16 +5,7 @@ import styles from './styles.module.css';
 import TableRow from '../components/TableRow';
 import { MONITORING_TARGETS } from '../monitoring-config';
 import { useMonitoringData } from '../fooks/useMonitoringData';
-
-function formatDate(date) {
-  return `${date.getFullYear()}/${String(date.getMonth() + 1).padStart(2, '0')}/${String(date.getDate()).padStart(2, '0')}`;
-}
-
-function adjustDate(currentDate, days) {
-  const adjustedDate = new Date(currentDate);
-  adjustedDate.setDate(currentDate.getDate() + days);
-  return formatDate(adjustedDate);
-}
+import { adjustDate } from '../utils/dateUtils';
 
 function createPayload(checkboxes, date) {
   const currentDate = new Date();
