@@ -32,15 +32,37 @@ function createPayload(checkboxes, date) {
 }
 
 /**
+ * 更新のためのデータを作成する
+ * @param checkboxes
+ * @param date
+ * @returns
+ */
+function createUpdatePayload(checkboxes, date) {
+  const currentDate = new Date();
+  currentDate.setTime(currentDate.getTime() + 9 * 60 * 60 * 1000);
+  const isoString = currentDate.toISOString();
+
+  return MONITORING_TARGETS.map(target => ({
+    target_name: target.name,
+    target_ip: target.ip,
+    is_working: checkboxes[target.key].visual,
+    is_backup_completed: checkboxes[target.key].backup,
+    is_not_alert: checkboxes[target.key].zabbix,
+    updated_at: isoString,  // 更新日時だけを考慮する
+    record_date: date
+  }));
+}
+
+/**
  * 送信用のデータをバックエンドに送信する
  * @param payloads
  * @param accessToken
  */
-async function sendData(payloads, accessToken) {
+async function sendData(payloads, accessToken, isDataRegistered) {
   for (const payload of payloads) {
     try {
       const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/monitoring`, {
-        method: 'POST',
+        method: isDataRegistered ? 'PATCH' : 'POST', // データが登録済みの場合はPUT、そうでない場合はPOST
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
           'Authorization': `Bearer ${accessToken}`
@@ -48,7 +70,7 @@ async function sendData(payloads, accessToken) {
         body: formUrlEncode(payload)
       });
 
-      if (response.status !== 201) {
+      if (response.status !== (isDataRegistered ? 200 : 201)) { // PUTの成功時は通常200を返す
         const errorData = await response.json();
         console.error(`Error: ${response.statusText}`);
         console.error(errorData);
@@ -59,13 +81,13 @@ async function sendData(payloads, accessToken) {
       console.error("There was an error submitting the data", error);
     }
   };
-  alert('送信が完了しました。');
+  alert(isDataRegistered ? '更新が完了しました。' : '送信が完了しました。'); // メッセージも動的に変更
 }
 
 export default function MonitoringForm() {
   const currentDate = new Date();
   const formattedDate = `${currentDate.getFullYear()}/${String(currentDate.getMonth() + 1).padStart(2, '0')}/${String(currentDate.getDate()).padStart(2, '0')}`;
-  const { accessToken, date, setDate, checkboxes, setCheckboxes, selectAllCheckboxes } = useMonitoringData(formattedDate);
+  const { accessToken, date, setDate, checkboxes, setCheckboxes, selectAllCheckboxes, isDataRegistered } = useMonitoringData(formattedDate);
 
   // 日付を進める
   const incrementDate = () => {
@@ -79,8 +101,10 @@ export default function MonitoringForm() {
 
   // フォームの入力値を送信する
   const submitData = async () => {
-    const payloads = createPayload(checkboxes, date);
-    await sendData(payloads, accessToken);
+    const payloads = isDataRegistered
+      ? createUpdatePayload(checkboxes, date)
+      : createPayload(checkboxes, date);
+    await sendData(payloads, accessToken, isDataRegistered);
   };
 
   return (
@@ -90,7 +114,7 @@ export default function MonitoringForm() {
         <span className={styles.dateHeader}>{date}</span>
         <button onClick={incrementDate}>＞</button>
         <button onClick={selectAllCheckboxes}>全選択</button>
-        <button onClick={submitData}>送信</button>
+        <button onClick={submitData}>{isDataRegistered ? '更新' : '送信'}</button>
       </div>
       <table className={styles.table}>
         <thead>
