@@ -1,47 +1,10 @@
 'use client'
 
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import styles from './styles.module.css';
 import TableRow from '../components/TableRow';
 import { MONITORING_TARGETS } from '../monitoring-config';
-
-// 監視用のチェックボックスの型定義
-type CheckboxType = {
-  visual: boolean;
-  zabbix: boolean;
-  backup: boolean;
-};
-
-async function fetchInitialCheckboxValues(date, setCheckboxes, token) {
-  try {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/monitoring?date=${date}`, {
-      method: 'GET',
-      headers: {
-        'Authorization': `Bearer ${token}`
-      },
-    });
-
-    const data = await response.json();
-
-    const updatedCheckboxes = MONITORING_TARGETS.reduce((acc, target) => {
-      const fetchedItem = data.find(item => item.target_name === target.name);
-      if (fetchedItem) {
-        acc[target.key] = {
-          visual: fetchedItem.is_working === "true",
-          zabbix: fetchedItem.is_not_alert === "true",
-          backup: fetchedItem.is_backup_completed === "true"
-        };
-      } else {
-        acc[target.key] = { visual: false, zabbix: false, backup: false };
-      }
-      return acc;
-    }, {});
-
-    setCheckboxes(updatedCheckboxes);
-  } catch (error) {
-    console.error("Error fetching initial checkbox values:", error);
-  }
-}
+import { useMonitoringData } from '../fooks/useMonitoringData';
 
 function formatDate(date) {
   return `${date.getFullYear()}/${String(date.getMonth() + 1).padStart(2, '0')}/${String(date.getDate()).padStart(2, '0')}`;
@@ -101,30 +64,9 @@ async function sendData(payloads, accessToken) {
 }
 
 export default function MonitoringForm() {
-  // アクセストークンをstateとして管理
-  const [accessToken, setAccessToken] = useState(null);
-
-  // 現在時刻を取得してフォーマットする。：2023/01/01
   const currentDate = new Date();
   const formattedDate = `${currentDate.getFullYear()}/${String(currentDate.getMonth() + 1).padStart(2, '0')}/${String(currentDate.getDate()).padStart(2, '0')}`;
-  const [date, setDate] = useState(formattedDate);
-
-  // 2. initialCheckboxesのデフォルト値を設定
-  const initialCheckboxes = MONITORING_TARGETS.reduce((acc, target) => {
-    acc[target.key] = { visual: false, zabbix: false, backup: false };
-    return acc;
-  }, {});
-  const [checkboxes, setCheckboxes] = useState<Record<string, CheckboxType>>(initialCheckboxes);
-
-
-  useEffect(() => {
-    const token = localStorage.getItem('accessToken');
-    if (token) {
-      setAccessToken(token);
-      fetchInitialCheckboxValues(date, setCheckboxes, token);
-    } else {
-      window.location.href = '/signin';
-    }  }, [date]);
+  const { accessToken, date, setDate, checkboxes, setCheckboxes } = useMonitoringData(formattedDate);
 
   const incrementDate = () => {
     setDate(prevDate => adjustDate(new Date(prevDate), 1));
