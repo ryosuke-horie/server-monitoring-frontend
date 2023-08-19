@@ -22,16 +22,20 @@ export default function SignIn() {
     const data = new FormData(event.currentTarget);
 
     const res = await axios.post('http://54.199.212.225:3000/auth/signin', {
-        email: data.get('email'),
-        password: data.get('password'),
+      email: data.get('email'),
+      password: data.get('password'),
     });
 
     // 例外処理
     if (res.status !== 201) {
-        console.log(res);
-        return;
+      alert('ログインに失敗しました。');
+      return;
     }
 
+    // accessTokenがすでにある場合は削除
+    localStorage.removeItem('accessToken');
+
+    // accessTokenをlocalStorageに保存
     localStorage.setItem('accessToken', res.data.accessToken);
 
     // /へリダイレクト
