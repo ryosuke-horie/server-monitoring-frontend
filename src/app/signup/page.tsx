@@ -32,13 +32,12 @@ export default function SignUp() {
       password: data.get('password'),
     })
 
-    console.log({
-      username: data.get('username'),
-      email: data.get('email'),
-      password: data.get('password'),
-    });
-
-    console.log(res);
+    // 成功した場合はサインインページに遷移
+    if (res.status === 201) {
+      window.location.href = '/signin';
+    } else {
+      alert('サインアップに失敗しました');
+    }
   };
 
   return (
