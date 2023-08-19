@@ -55,43 +55,13 @@ export default function MonitoringForm() {
         const updatedCheckboxes = { ...checkboxes }; // 現在のcheckboxesのコピー
 
         data.forEach(item => {
-          switch (item.target_name) {
-            case "パチンコビスタ":
-              updatedCheckboxes.example1 = {
-                visual: item.is_working === "true",
-                zabbix: item.is_not_alert === "true",
-                backup: item.is_backup_completed === "true"
-              };
-              break;
-            case "券売機":
-              updatedCheckboxes.example2 = {
-                visual: item.is_working === "true",
-                zabbix: item.is_not_alert === "true",
-                backup: item.is_backup_completed === "true"
-              };
-            case "エフエス":
-              updatedCheckboxes.example3 = {
-                visual: item.is_working === "true",
-                zabbix: item.is_not_alert === "true",
-                backup: item.is_backup_completed === "true"
-              };
-              break;
-            case "グループセッション":
-              updatedCheckboxes.example4 = {
-                visual: item.is_working === "true",
-                zabbix: item.is_not_alert === "true",
-                backup: item.is_backup_completed === "true"
-              };
-              break;
-            case "券売機プロ":
-              updatedCheckboxes.example5 = {
-                visual: item.is_working === "true",
-                zabbix: item.is_not_alert === "true",
-                backup: item.is_backup_completed === "true"
-              };
-              break;
-            default:
-              break;
+          const targetKey = MONITORING_TARGETS.find(target => target.name === item.target_name)?.key;
+          if (targetKey) {
+            updatedCheckboxes[targetKey] = {
+              visual: item.is_working === "true",
+              zabbix: item.is_not_alert === "true",
+              backup: item.is_backup_completed === "true"
+            };
           }
         });
 
