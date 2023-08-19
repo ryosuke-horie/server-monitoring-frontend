@@ -3,15 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import styles from './styles.module.css';
 import TableRow from '../components/TableRow';
-
-// 監視対象サービスのリスト。
-const MONITORING_TARGETS = [
-  { key: 'example1', name: 'パチンコビスタ', ip: '192.168.20.32' },
-  { key: 'example2', name: '券売機', ip: '192.168.20.32' },
-  { key: 'example3', name: 'エフエス', ip: '192.168.20.32' },
-  { key: 'example4', name: 'グループセッション', ip: '192.168.20.32' },
-  { key: 'example5', name: '券売機プロ', ip: '192.168.20.32' },
-];
+import { MONITORING_TARGETS } from '../monitoring-config';
 
 // 監視用のチェックボックスの型定義
 type CheckboxType = {
