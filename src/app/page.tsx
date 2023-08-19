@@ -1,7 +1,8 @@
 'use client'
 
-import React, { useEffect } from 'react';
-import { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import styles from './styles.module.css';
+import TableRow from '../components/TableRow';
 
 // TODO: anyの部分を型定義する
 export default function MonitoringForm() {
@@ -172,89 +173,31 @@ export default function MonitoringForm() {
   };
 
   return (
-    <div className='body-wrapper'>
-      <div className="header">
+    <div className={styles.bodyWrapper}>
+      <div className={styles.header}>
         <button onClick={decrementDate}>＜</button>
-        <span className="date-header">{date}</span>
+        <span className={styles.dateHeader}>{date}</span>
         <button onClick={incrementDate}>＞</button>
         <button onClick={selectAll}>全選択</button>
         <button onClick={submitData}>送信</button>
       </div>
-      <table>
+      <table className={styles.table}>
         <thead>
           <tr>
-            <th>サイト名</th>
-            <th>目視確認</th>
-            <th>Zabbix</th>
-            <th>Backup</th>
+            <th className={styles.tableHeader}>サイト名</th>
+            <th className={styles.tableHeader}>目視確認</th>
+            <th className={styles.tableHeader}>Zabbix</th>
+            <th className={styles.tableHeader}>Backup</th>
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <td>パチンコビスタ</td>
-            <td><input type="checkbox" checked={checkboxes.example1.visual} onChange={(e) => setCheckboxes(prev => ({ ...prev, example1: { ...prev.example1, visual: e.target.checked } }))} /></td>
-            <td><input type="checkbox" checked={checkboxes.example1.zabbix} onChange={(e) => setCheckboxes(prev => ({ ...prev, example1: { ...prev.example1, zabbix: e.target.checked } }))} /></td>
-            <td><input type="checkbox" checked={checkboxes.example1.backup} onChange={(e) => setCheckboxes(prev => ({ ...prev, example1: { ...prev.example1, backup: e.target.checked } }))} /></td>
-          </tr>
-          <tr>
-            <td>券売機</td>
-            <td><input type="checkbox" checked={checkboxes.example2.visual} onChange={(e) => setCheckboxes(prev => ({ ...prev, example2: { ...prev.example2, visual: e.target.checked } }))} /></td>
-            <td><input type="checkbox" checked={checkboxes.example2.zabbix} onChange={(e) => setCheckboxes(prev => ({ ...prev, example2: { ...prev.example2, zabbix: e.target.checked } }))} /></td>
-            <td><input type="checkbox" checked={checkboxes.example2.backup} onChange={(e) => setCheckboxes(prev => ({ ...prev, example2: { ...prev.example2, backup: e.target.checked } }))} /></td>
-          </tr>
-          <tr>
-            <td>エフ・エス</td>
-            <td><input type="checkbox" checked={checkboxes.example3.visual} onChange={(e) => setCheckboxes(prev => ({ ...prev, example3: { ...prev.example3, visual: e.target.checked } }))} /></td>
-            <td><input type="checkbox" checked={checkboxes.example3.zabbix} onChange={(e) => setCheckboxes(prev => ({ ...prev, example3: { ...prev.example3, zabbix: e.target.checked } }))} /></td>
-            <td><input type="checkbox" checked={checkboxes.example3.backup} onChange={(e) => setCheckboxes(prev => ({ ...prev, example3: { ...prev.example3, backup: e.target.checked } }))} /></td>
-          </tr>
-          <tr>
-            <td>グループセッション</td>
-            <td><input type="checkbox" checked={checkboxes.example4.visual} onChange={(e) => setCheckboxes(prev => ({ ...prev, example4: { ...prev.example4, visual: e.target.checked } }))} /></td>
-            <td><input type="checkbox" checked={checkboxes.example4.zabbix} onChange={(e) => setCheckboxes(prev => ({ ...prev, example4: { ...prev.example4, zabbix: e.target.checked } }))} /></td>
-            <td><input type="checkbox" checked={checkboxes.example4.backup} onChange={(e) => setCheckboxes(prev => ({ ...prev, example4: { ...prev.example4, backup: e.target.checked } }))} /></td>
-          </tr>
-          <tr>
-            <td>券売機プロ</td>
-            <td><input type="checkbox" checked={checkboxes.example5.visual} onChange={(e) => setCheckboxes(prev => ({ ...prev, example5: { ...prev.example5, visual: e.target.checked } }))} /></td>
-            <td><input type="checkbox" checked={checkboxes.example5.zabbix} onChange={(e) => setCheckboxes(prev => ({ ...prev, example5: { ...prev.example5, zabbix: e.target.checked } }))} /></td>
-            <td><input type="checkbox" checked={checkboxes.example5.backup} onChange={(e) => setCheckboxes(prev => ({ ...prev, example5: { ...prev.example5, backup: e.target.checked } }))} /></td>
-          </tr>
+          <TableRow siteName="パチンコビスタ" checkboxData={checkboxes.example1} setCheckboxes={setCheckboxes} />
+          <TableRow siteName="券売機" checkboxData={checkboxes.example2} setCheckboxes={setCheckboxes} />
+          <TableRow siteName="券売機プロ" checkboxData={checkboxes.example3} setCheckboxes={setCheckboxes} />
+          <TableRow siteName="グループセッション" checkboxData={checkboxes.example4} setCheckboxes={setCheckboxes} />
+          <TableRow siteName="エフ・エス" checkboxData={checkboxes.example5} setCheckboxes={setCheckboxes} />
         </tbody>
       </table>
-      <style jsx>{`
-              .body-wrapper {
-                margin-right: 20px;
-                margin-left:20px;
-              }
-              .header {
-                  display: flex;
-                  justify-content: space-between;
-                  align-items: center;
-                  margin-bottom: 20px;
-                  margin-top: 10px;
-              }
-              .date-header {
-                  font-size: 1.5em;
-                  font-weight: bold;
-                  margin: 0 5px;
-              }
-              button {
-                  margin: 0 2px;
-              }
-              table {
-                width: 100%;
-                border-collapse: collapse;
-              }
-              th, td {
-                border: 1px solid black;
-                padding: 2px;
-                text-align: center;
-              }
-              input[type="checkbox"] {
-                transform: scale(2.0);
-              }
-            `}</style>
     </div>
   );
 }

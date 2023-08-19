@@ -1,0 +1,8 @@
+.tableCell {
+  border: 1px solid black;
+  padding: 2px;
+  text-align: center;
+}
+.checkbox {
+  transform: scale(2);
+}
