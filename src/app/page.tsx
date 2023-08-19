@@ -8,6 +8,12 @@ import { useMonitoringData } from '../fooks/useMonitoringData';
 import { adjustDate } from '../utils/dateUtils';
 import { formUrlEncode } from '../utils/httpUtils';
 
+/**
+ * フォームの入力値から送信用のデータを作成する
+ * @param checkboxes
+ * @param date
+ * @returns
+ */
 function createPayload(checkboxes, date) {
   const currentDate = new Date();
   currentDate.setTime(currentDate.getTime() + 9 * 60 * 60 * 1000);
@@ -25,6 +31,11 @@ function createPayload(checkboxes, date) {
   }));
 }
 
+/**
+ * 送信用のデータをバックエンドに送信する
+ * @param payloads
+ * @param accessToken
+ */
 async function sendData(payloads, accessToken) {
   for (const payload of payloads) {
     try {
@@ -56,14 +67,17 @@ export default function MonitoringForm() {
   const formattedDate = `${currentDate.getFullYear()}/${String(currentDate.getMonth() + 1).padStart(2, '0')}/${String(currentDate.getDate()).padStart(2, '0')}`;
   const { accessToken, date, setDate, checkboxes, setCheckboxes, selectAllCheckboxes } = useMonitoringData(formattedDate);
 
+  // 日付を進める
   const incrementDate = () => {
     setDate(prevDate => adjustDate(new Date(prevDate), 1));
   }
 
+  // 日付を戻す
   const decrementDate = () => {
     setDate(prevDate => adjustDate(new Date(prevDate), -1));
   }
 
+  // フォームの入力値を送信する
   const submitData = async () => {
     const payloads = createPayload(checkboxes, date);
     await sendData(payloads, accessToken);
