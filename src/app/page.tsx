@@ -66,7 +66,7 @@ async function sendData(payloads, accessToken) {
 export default function MonitoringForm() {
   const currentDate = new Date();
   const formattedDate = `${currentDate.getFullYear()}/${String(currentDate.getMonth() + 1).padStart(2, '0')}/${String(currentDate.getDate()).padStart(2, '0')}`;
-  const { accessToken, date, setDate, checkboxes, setCheckboxes } = useMonitoringData(formattedDate);
+  const { accessToken, date, setDate, checkboxes, setCheckboxes, selectAllCheckboxes } = useMonitoringData(formattedDate);
 
   const incrementDate = () => {
     setDate(prevDate => adjustDate(new Date(prevDate), 1));
@@ -74,14 +74,6 @@ export default function MonitoringForm() {
 
   const decrementDate = () => {
     setDate(prevDate => adjustDate(new Date(prevDate), -1));
-  }
-
-  const selectAll = () => {
-    const allSelectedCheckboxes = Object.keys(checkboxes).reduce((acc, key) => {
-      acc[key] = { visual: true, zabbix: true, backup: true };
-      return acc;
-    }, {});
-    setCheckboxes(allSelectedCheckboxes);
   }
 
   const submitData = async () => {
@@ -95,7 +87,7 @@ export default function MonitoringForm() {
         <button onClick={decrementDate}>＜</button>
         <span className={styles.dateHeader}>{date}</span>
         <button onClick={incrementDate}>＞</button>
-        <button onClick={selectAll}>全選択</button>
+        <button onClick={selectAllCheckboxes}>全選択</button>
         <button onClick={submitData}>送信</button>
       </div>
       <table className={styles.table}>

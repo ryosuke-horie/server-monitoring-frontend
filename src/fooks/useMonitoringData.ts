@@ -56,5 +56,20 @@ export function useMonitoringData(initialDate) {
     }
   }, [date]);
 
-  return { accessToken, date, setDate, checkboxes, setCheckboxes };
+  const selectAllCheckboxes = () => {
+    const allSelectedCheckboxes = MONITORING_TARGETS.reduce((acc, target) => {
+      acc[target.key] = { visual: true, zabbix: true, backup: true };
+      return acc;
+    }, {});
+    setCheckboxes(allSelectedCheckboxes);
+  };
+
+  return {
+    accessToken,
+    date,
+    setDate,
+    checkboxes,
+    selectAllCheckboxes,
+    setCheckboxes,
+  };
 }
