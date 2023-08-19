@@ -6,6 +6,7 @@ import TableRow from '../components/TableRow';
 import { MONITORING_TARGETS } from '../monitoring-config';
 import { useMonitoringData } from '../fooks/useMonitoringData';
 import { adjustDate } from '../utils/dateUtils';
+import { formUrlEncode } from '../utils/httpUtils';
 
 function createPayload(checkboxes, date) {
   const currentDate = new Date();
@@ -25,10 +26,6 @@ function createPayload(checkboxes, date) {
 }
 
 async function sendData(payloads, accessToken) {
-  const formUrlEncode = (obj) => Object.keys(obj)
-    .map(k => `${encodeURIComponent(k)}=${encodeURIComponent(obj[k] === true ? "true" : obj[k] === false ? "false" : obj[k])}`)
-    .join('&');
-
   for (const payload of payloads) {
     try {
       const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/monitoring`, {
