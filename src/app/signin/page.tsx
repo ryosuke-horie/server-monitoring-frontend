@@ -21,7 +21,7 @@ export default function SignIn() {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
 
-    const res = await axios.post('http://54.199.212.225:3000/auth/signin', {
+    const res = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/auth/signin`, {
       email: data.get('email'),
       password: data.get('password'),
     });

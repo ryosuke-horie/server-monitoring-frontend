@@ -26,7 +26,7 @@ export default function SignUp() {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
 
-    const res = await axios.post('http://54.199.212.225:3000/auth/signup', {
+    const res = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/auth/signup`, {
       username: data.get('username'),
       email: data.get('email'),
       password: data.get('password'),

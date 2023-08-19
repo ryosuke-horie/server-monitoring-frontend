@@ -23,8 +23,7 @@ export default function ReportDetailPage() {
 
     // Nest.jsのAPIを叩いて、当月のサーバー監視記録を取得する
     const getReportData = async () => {
-      // 例：http://54.199.212.225:3000/monthly-report/?dateYear=202308
-      const apiUrl = 'http://54.199.212.225:3000/monthly-report/?dateYear=' + dateYear;
+      const apiUrl = `${process.env.NEXT_PUBLIC_BACKEND_URL}/monthly-report/?dateYear=${dateYear}`;
 
       try {
         const response = await fetch(apiUrl, {
@@ -36,7 +35,7 @@ export default function ReportDetailPage() {
 
           const data = await response.json();
           setReportData(data);
-        
+
       } catch (error) {
         console.error("There was an error fetching the data", error);
       }

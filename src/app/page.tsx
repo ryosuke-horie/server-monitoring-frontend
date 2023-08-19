@@ -23,7 +23,7 @@ export default function MonitoringForm() {
     // チェックボックスの初期値を取得する関数
     const fetchInitialCheckboxValues = async () => {
       try {
-        const response = await fetch(`http://54.199.212.225:3000/monitoring?date=${date}`, {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/monitoring?date=${date}`, {
           method: 'GET',
           headers: {
             'Authorization': `Bearer ${token}`
@@ -145,7 +145,7 @@ export default function MonitoringForm() {
     // 各行のデータを1件ずつPOSTする
     for (const payload of rows) {
       try {
-        const response = await fetch('http://54.199.212.225:3000/monitoring', {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/monitoring`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/x-www-form-urlencoded',
