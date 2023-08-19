@@ -20,6 +20,94 @@ type CheckboxType = {
   backup: boolean;
 };
 
+async function fetchInitialCheckboxValues(date, setCheckboxes, token) {
+  try {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/monitoring?date=${date}`, {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${token}`
+      },
+    });
+
+    const data = await response.json();
+
+    const updatedCheckboxes = MONITORING_TARGETS.reduce((acc, target) => {
+      const fetchedItem = data.find(item => item.target_name === target.name);
+      if (fetchedItem) {
+        acc[target.key] = {
+          visual: fetchedItem.is_working === "true",
+          zabbix: fetchedItem.is_not_alert === "true",
+          backup: fetchedItem.is_backup_completed === "true"
+        };
+      } else {
+        acc[target.key] = { visual: false, zabbix: false, backup: false };
+      }
+      return acc;
+    }, {});
+
+    setCheckboxes(updatedCheckboxes);
+  } catch (error) {
+    console.error("Error fetching initial checkbox values:", error);
+  }
+}
+
+function formatDate(date) {
+  return `${date.getFullYear()}/${String(date.getMonth() + 1).padStart(2, '0')}/${String(date.getDate()).padStart(2, '0')}`;
+}
+
+function adjustDate(currentDate, days) {
+  const adjustedDate = new Date(currentDate);
+  adjustedDate.setDate(currentDate.getDate() + days);
+  return formatDate(adjustedDate);
+}
+
+function createPayload(checkboxes, date) {
+  const currentDate = new Date();
+  currentDate.setTime(currentDate.getTime() + 9 * 60 * 60 * 1000);
+  const isoString = currentDate.toISOString();
+
+  return MONITORING_TARGETS.map(target => ({
+    target_name: target.name,
+    target_ip: target.ip,
+    is_working: checkboxes[target.key].visual,
+    is_backup_completed: checkboxes[target.key].backup,
+    is_not_alert: checkboxes[target.key].zabbix,
+    created_at: isoString,
+    updated_at: isoString,
+    record_date: date
+  }));
+}
+
+async function sendData(payloads, accessToken) {
+  const formUrlEncode = (obj) => Object.keys(obj)
+    .map(k => `${encodeURIComponent(k)}=${encodeURIComponent(obj[k] === true ? "true" : obj[k] === false ? "false" : obj[k])}`)
+    .join('&');
+
+  for (const payload of payloads) {
+    try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/monitoring`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+          'Authorization': `Bearer ${accessToken}`
+        },
+        body: formUrlEncode(payload)
+      });
+
+      if (response.status !== 201) {
+        const errorData = await response.json();
+        console.error(`Error: ${response.statusText}`);
+        console.error(errorData);
+        alert(`送信に失敗しました。${response.statusText}`);
+      }
+    } catch (error) {
+      alert(`送信に失敗しました。${error}`);
+      console.error("There was an error submitting the data", error);
+    }
+  };
+  alert('送信が完了しました。');
+}
+
 export default function MonitoringForm() {
   // アクセストークンをstateとして管理
   const [accessToken, setAccessToken] = useState(null);
@@ -29,130 +117,42 @@ export default function MonitoringForm() {
   const formattedDate = `${currentDate.getFullYear()}/${String(currentDate.getMonth() + 1).padStart(2, '0')}/${String(currentDate.getDate()).padStart(2, '0')}`;
   const [date, setDate] = useState(formattedDate);
 
-  useEffect(() => {
-    // アクセストークンをlocalStorageから取得してstateにセット
-    const token = localStorage.getItem('accessToken');
-    setAccessToken(token);
-
-    // もしアクセストークンがなければ、サインインページにリダイレクトさせる
-    if (!token) {
-      window.location.href = '/signin';
-    }
-
-    // チェックボックスの初期値を取得する関数
-    const fetchInitialCheckboxValues = async () => {
-      try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/monitoring?date=${date}`, {
-          method: 'GET',
-          headers: {
-            'Authorization': `Bearer ${token}`
-          },
-        });
-
-        const data = await response.json();
-
-        // フェッチしたデータを元にcheckboxes stateを更新
-        const updatedCheckboxes = { ...checkboxes }; // 現在のcheckboxesのコピー
-
-        data.forEach(item => {
-          const targetKey = MONITORING_TARGETS.find(target => target.name === item.target_name)?.key;
-          if (targetKey) {
-            updatedCheckboxes[targetKey] = {
-              visual: item.is_working === "true",
-              zabbix: item.is_not_alert === "true",
-              backup: item.is_backup_completed === "true"
-            };
-          }
-        });
-
-        setCheckboxes(updatedCheckboxes);
-      } catch (error) {
-        console.error("Error fetching initial checkbox values:", error);
-      }
-    };
-
-    fetchInitialCheckboxValues(); // 関数の実行
-  }, []);
-
-  // 日付を1日進める関数
-  const incrementDate = () => {
-    let [year, month, day] = date.split('/').map(Number);
-    const nextDate = new Date(year, month - 1, day + 1);
-    setDate(`${nextDate.getFullYear()}/${String(nextDate.getMonth() + 1).padStart(2, '0')}/${String(nextDate.getDate()).padStart(2, '0')}`);
-  }
-
-  // 日付を1日戻す関数
-  const decrementDate = () => {
-    let [year, month, day] = date.split('/').map(Number);
-    const prevDate = new Date(year, month - 1, day - 1);
-    setDate(`${prevDate.getFullYear()}/${String(prevDate.getMonth() + 1).padStart(2, '0')}/${String(prevDate.getDate()).padStart(2, '0')}`);
-  }
-
+  // 2. initialCheckboxesのデフォルト値を設定
   const initialCheckboxes = MONITORING_TARGETS.reduce((acc, target) => {
     acc[target.key] = { visual: false, zabbix: false, backup: false };
     return acc;
   }, {});
-
   const [checkboxes, setCheckboxes] = useState<Record<string, CheckboxType>>(initialCheckboxes);
 
+
+  useEffect(() => {
+    const token = localStorage.getItem('accessToken');
+    if (token) {
+      setAccessToken(token);
+      fetchInitialCheckboxValues(date, setCheckboxes, token);
+    } else {
+      window.location.href = '/signin';
+    }  }, [date]);
+
+  const incrementDate = () => {
+    setDate(prevDate => adjustDate(new Date(prevDate), 1));
+  }
+
+  const decrementDate = () => {
+    setDate(prevDate => adjustDate(new Date(prevDate), -1));
+  }
+
   const selectAll = () => {
-    const updatedCheckboxes: { [key in keyof typeof checkboxes]: CheckboxType } = {} as any;
-
-    for (let key in checkboxes) {
-      updatedCheckboxes[key as keyof typeof checkboxes] = { visual: true, zabbix: true, backup: true };
-    }
-
-    setCheckboxes(updatedCheckboxes);
-  };
+    const allSelectedCheckboxes = Object.keys(checkboxes).reduce((acc, key) => {
+      acc[key] = { visual: true, zabbix: true, backup: true };
+      return acc;
+    }, {});
+    setCheckboxes(allSelectedCheckboxes);
+  }
 
   const submitData = async () => {
-    const currentDate = new Date();
-    currentDate.setTime(currentDate.getTime() + 9 * 60 * 60 * 1000);
-    const isoString = currentDate.toISOString();
-
-    const rows = MONITORING_TARGETS.map(target => ({
-      target_name: target.name,
-      target_ip: target.ip,
-      is_working: checkboxes[target.key].visual,
-      is_backup_completed: checkboxes[target.key].backup,
-      is_not_alert: checkboxes[target.key].zabbix,
-      created_at: isoString,
-      updated_at: isoString,
-      record_date: date
-    }));
-
-    // x-www-form-urlencoded形式でエンコードする関数
-    const formUrlEncode = (obj) => Object.keys(obj)
-    .map(k => `${encodeURIComponent(k)}=${encodeURIComponent(obj[k] === true ? "true" : obj[k] === false ? "false" : obj[k])}`)
-    .join('&');
-
-    // 各行のデータを1件ずつPOSTする
-    for (const payload of rows) {
-      try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/monitoring`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-            'Authorization': `Bearer ${accessToken}`
-          },
-          body: formUrlEncode(payload) // bodyをエンコードする
-        });
-
-        if (response.status === 201) { // 成功時のステータスコードを201としてチェック
-          const data = await response.json();
-          console.log(data);
-        } else {
-          const errorData = await response.json();
-          console.error(`Error: ${response.statusText}`);
-          console.error(errorData);
-          alert(`送信に失敗しました。${response.statusText}`);
-        }
-      } catch (error) {
-        alert(`送信に失敗しました。${error}`);
-        console.error("There was an error submitting the data", error);
-      }
-    };
-    alert('送信が完了しました。');
+    const payloads = createPayload(checkboxes, date);
+    await sendData(payloads, accessToken);
   };
 
   return (
