@@ -24,7 +24,7 @@ export default function Header() {
             <Link href="/signin">SignIn</Link>
           </Typography>
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-            <Link href="/report_list">signup</Link>
+            <Link href="/signup">signup</Link>
           </Typography>
         </Toolbar>
       </AppBar>

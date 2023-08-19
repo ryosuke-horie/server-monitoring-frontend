@@ -1,0 +1,29 @@
+.bodyWrapper {
+  margin-right: 20px;
+  margin-left: 20px;
+}
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  margin-top: 10px;
+}
+.dateHeader {
+  font-size: 1.5em;
+  font-weight: bold;
+  margin: 0 5px;
+}
+.button {
+  margin: 0 2px;
+}
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.tableHeader {
+  border: 1px solid black;
+  padding: 2px;
+  text-align: center;
+}
+
