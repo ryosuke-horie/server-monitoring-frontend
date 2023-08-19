@@ -4,19 +4,37 @@ import React, { useEffect, useState } from 'react';
 import styles from './styles.module.css';
 import TableRow from '../components/TableRow';
 
-// TODO: anyの部分を型定義する
+// 監視対象サービスのリスト。
+const MONITORING_TARGETS = [
+  { key: 'example1', name: 'パチンコビスタ', ip: '192.168.20.32' },
+  { key: 'example2', name: '券売機', ip: '192.168.20.32' },
+  { key: 'example3', name: 'エフエス', ip: '192.168.20.32' },
+  { key: 'example4', name: 'グループセッション', ip: '192.168.20.32' },
+  { key: 'example5', name: '券売機プロ', ip: '192.168.20.32' },
+];
+
+// 監視用のチェックボックスの型定義
+type CheckboxType = {
+  visual: boolean;
+  zabbix: boolean;
+  backup: boolean;
+};
+
 export default function MonitoringForm() {
+  // アクセストークンをstateとして管理
   const [accessToken, setAccessToken] = useState(null);
 
+  // 現在時刻を取得してフォーマットする。：2023/01/01
   const currentDate = new Date();
   const formattedDate = `${currentDate.getFullYear()}/${String(currentDate.getMonth() + 1).padStart(2, '0')}/${String(currentDate.getDate()).padStart(2, '0')}`;
-
   const [date, setDate] = useState(formattedDate);
 
   useEffect(() => {
+    // アクセストークンをlocalStorageから取得してstateにセット
     const token = localStorage.getItem('accessToken');
     setAccessToken(token);
 
+    // もしアクセストークンがなければ、サインインページにリダイレクトさせる
     if (!token) {
       window.location.href = '/signin';
     }
@@ -100,20 +118,12 @@ export default function MonitoringForm() {
     setDate(`${prevDate.getFullYear()}/${String(prevDate.getMonth() + 1).padStart(2, '0')}/${String(prevDate.getDate()).padStart(2, '0')}`);
   }
 
-  // 各チェックボックスの選択状態を管理する state
-  const [checkboxes, setCheckboxes] = useState({
-    example1: { visual: false, zabbix: false, backup: false },
-    example2: { visual: false, zabbix: false, backup: false },
-    example3: { visual: false, zabbix: false, backup: false },
-    example4: { visual: false, zabbix: false, backup: false },
-    example5: { visual: false, zabbix: false, backup: false },
-  });
+  const initialCheckboxes = MONITORING_TARGETS.reduce((acc, target) => {
+    acc[target.key] = { visual: false, zabbix: false, backup: false };
+    return acc;
+  }, {});
 
-  type CheckboxType = {
-    visual: boolean;
-    zabbix: boolean;
-    backup: boolean;
-  };
+  const [checkboxes, setCheckboxes] = useState<Record<string, CheckboxType>>(initialCheckboxes);
 
   const selectAll = () => {
     const updatedCheckboxes: { [key in keyof typeof checkboxes]: CheckboxType } = {} as any;
@@ -130,13 +140,16 @@ export default function MonitoringForm() {
     currentDate.setTime(currentDate.getTime() + 9 * 60 * 60 * 1000);
     const isoString = currentDate.toISOString();
 
-    const rows = [
-      { target_name: "パチンコビスタ", target_ip: "192.168.20.32", is_working: checkboxes.example1.visual, is_backup_completed: checkboxes.example1.backup, is_not_alert: checkboxes.example1.zabbix, created_at: isoString, updated_at: isoString, record_date: date },
-      { target_name: "券売機", target_ip: "192.168.20.32", is_working: checkboxes.example2.visual, is_backup_completed: checkboxes.example2.backup, is_not_alert: checkboxes.example2.zabbix, created_at: isoString, updated_at: isoString, record_date: date },
-      { target_name: "エフエス", target_ip: "192.168.20.32", is_working: checkboxes.example3.visual, is_backup_completed: checkboxes.example3.backup, is_not_alert: checkboxes.example3.zabbix, created_at: isoString, updated_at: isoString, record_date: date },
-      { target_name: "グループセッション", target_ip: "192.168.20.32", is_working: checkboxes.example4.visual, is_backup_completed: checkboxes.example4.backup, is_not_alert: checkboxes.example4.zabbix, created_at: isoString, updated_at: isoString, record_date: date },
-      { target_name: "券売機プロ", target_ip: "192.168.20.32", is_working: checkboxes.example5.visual, is_backup_completed: checkboxes.example5.backup, is_not_alert: checkboxes.example5.zabbix, created_at: isoString, updated_at: isoString, record_date: date },
-    ];
+    const rows = MONITORING_TARGETS.map(target => ({
+      target_name: target.name,
+      target_ip: target.ip,
+      is_working: checkboxes[target.key].visual,
+      is_backup_completed: checkboxes[target.key].backup,
+      is_not_alert: checkboxes[target.key].zabbix,
+      created_at: isoString,
+      updated_at: isoString,
+      record_date: date
+    }));
 
     // x-www-form-urlencoded形式でエンコードする関数
     const formUrlEncode = (obj) => Object.keys(obj)
@@ -191,11 +204,14 @@ export default function MonitoringForm() {
           </tr>
         </thead>
         <tbody>
-          <TableRow siteName="パチンコビスタ" checkboxData={checkboxes.example1} setCheckboxes={setCheckboxes} />
-          <TableRow siteName="券売機" checkboxData={checkboxes.example2} setCheckboxes={setCheckboxes} />
-          <TableRow siteName="券売機プロ" checkboxData={checkboxes.example3} setCheckboxes={setCheckboxes} />
-          <TableRow siteName="グループセッション" checkboxData={checkboxes.example4} setCheckboxes={setCheckboxes} />
-          <TableRow siteName="エフ・エス" checkboxData={checkboxes.example5} setCheckboxes={setCheckboxes} />
+          {MONITORING_TARGETS.map(target => (
+            <TableRow
+              key={target.key}
+              siteName={target.name}
+              checkboxData={checkboxes[target.key]}
+              setCheckboxes={setCheckboxes}
+            />
+          ))}
         </tbody>
       </table>
     </div>
