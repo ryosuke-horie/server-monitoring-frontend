@@ -129,6 +129,7 @@ export default function MonitoringForm() {
           {MONITORING_TARGETS.map(target => (
             <TableRow
               key={target.key}
+              keyValue={target.key}
               siteName={target.name}
               checkboxData={checkboxes[target.key]}
               setCheckboxes={setCheckboxes}
