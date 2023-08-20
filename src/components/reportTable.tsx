@@ -18,14 +18,6 @@ interface DataTableProps {
   data: ServerData;
 }
 
-
-// 前提として、データは以下の形式でpropsとして渡される
-// data = {
-//   エフエス: [],
-//   グループセッション: [{...}, {...}],
-//   ...
-// }
-
 export default function ReportTable({ data }: DataTableProps) {
   if (!data) return <div>No data available.</div>;
 
@@ -41,7 +33,7 @@ export default function ReportTable({ data }: DataTableProps) {
                   <th>日時</th>
                   <th>バックアップ</th>
                   <th>Zabbixアラート</th>
-                  <th>目視</th>
+                  <th>目視確認</th>
                   <th>担当者</th>
                 </tr>
               </thead>
@@ -51,9 +43,9 @@ export default function ReportTable({ data }: DataTableProps) {
                     <tr key={idx}>
                       <td>{record.record_date}</td>
 
-                      <td>{record.is_backup_completed ? 'Yes' : 'No'}</td>
-                      <td>{record.is_not_alert ? 'Yes' : 'No'}</td>
-                      <td>{record.is_working ? 'Yes' : 'No'}</td>
+                      <td>{record.is_backup_completed ? 'OK' : 'NG'}</td>
+                      <td>{record.is_not_alert ? 'OK' : 'NG'}</td>
+                      <td>{record.is_working ? 'OK' : 'NG'}</td>
                       <td>{record.user.username}</td>
                     </tr>
                   ))
