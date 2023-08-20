@@ -22,6 +22,8 @@ export function useMonitoringData(initialDate) {
     } else {
       window.location.href = "/signin";
     }
+    // トークンの有効性をチェック
+    checkToken(token);
   }, [date]);
 
   const selectAllCheckboxes = () => {
@@ -41,6 +43,31 @@ export function useMonitoringData(initialDate) {
     setCheckboxes,
     isDataRegistered,
   };
+
+  /**
+   * トークンの有効性をチェックする
+   * @param token
+   */
+  async function checkToken(token) {
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/auth/check-token`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      // トークンが無効ならサインイン画面へリダイレクト
+      if (!response.ok) {
+        window.location.href = "/signin";
+      }
+    } catch (error) {
+      // トークンが無効な場合はサインイン画面にリダイレクト
+      window.location.href = "/signin";
+    }
+  }
 
   async function fetchInitialCheckboxValues(date, setCheckboxes, token) {
     try {

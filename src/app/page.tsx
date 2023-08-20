@@ -70,6 +70,13 @@ async function sendData(payloads, accessToken, isDataRegistered) {
         body: formUrlEncode(payload)
       });
 
+      if (response.status === 401) {  // Unauthorized
+        alert('アクセストークンが不正です。再度サインインしてください。');
+        // signin画面に遷移する
+        window.location.href = "/signin";
+        return;
+      }
+
       if (response.status !== (isDataRegistered ? 200 : 201)) { // Patchの成功時は通常200を返す
         const errorData = await response.json();
         console.error(`Error: ${response.statusText}`);
