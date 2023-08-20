@@ -62,7 +62,7 @@ async function sendData(payloads, accessToken, isDataRegistered) {
   for (const payload of payloads) {
     try {
       const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/monitoring`, {
-        method: isDataRegistered ? 'PATCH' : 'POST', // データが登録済みの場合はPUT、そうでない場合はPOST
+        method: isDataRegistered ? 'PATCH' : 'POST', // データが登録済みの場合はPatch、そうでない場合はPOST
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
           'Authorization': `Bearer ${accessToken}`
@@ -70,7 +70,7 @@ async function sendData(payloads, accessToken, isDataRegistered) {
         body: formUrlEncode(payload)
       });
 
-      if (response.status !== (isDataRegistered ? 200 : 201)) { // PUTの成功時は通常200を返す
+      if (response.status !== (isDataRegistered ? 200 : 201)) { // Patchの成功時は通常200を返す
         const errorData = await response.json();
         console.error(`Error: ${response.statusText}`);
         console.error(errorData);
