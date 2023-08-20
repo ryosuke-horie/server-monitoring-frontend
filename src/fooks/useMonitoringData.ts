@@ -26,6 +26,7 @@ export function useMonitoringData(initialDate) {
     checkToken(token);
   }, [date]);
 
+  // チェックボックスを全て選択する
   const selectAllCheckboxes = () => {
     const allSelectedCheckboxes = MONITORING_TARGETS.reduce((acc, target) => {
       acc[target.key] = { visual: true, zabbix: true, backup: true };
@@ -34,12 +35,22 @@ export function useMonitoringData(initialDate) {
     setCheckboxes(allSelectedCheckboxes);
   };
 
+  // チェックボックスの選択を解除する
+  const deselectAllCheckboxes = () => {
+    const allDeselectedCheckboxes = MONITORING_TARGETS.reduce((acc, target) => {
+      acc[target.key] = { visual: false, zabbix: false, backup: false };
+      return acc;
+    }, {});
+    setCheckboxes(allDeselectedCheckboxes);
+  };
+
   return {
     accessToken,
     date,
     setDate,
     checkboxes,
     selectAllCheckboxes,
+    deselectAllCheckboxes,
     setCheckboxes,
     isDataRegistered,
   };

@@ -101,7 +101,7 @@ const getDayOfWeek = (dateString) => {
 export default function MonitoringForm() {
   const currentDate = new Date();
   const formattedDate = `${currentDate.getFullYear()}/${String(currentDate.getMonth() + 1).padStart(2, '0')}/${String(currentDate.getDate()).padStart(2, '0')}`;
-  const { accessToken, date, setDate, checkboxes, setCheckboxes, selectAllCheckboxes, isDataRegistered } = useMonitoringData(formattedDate);
+  const { accessToken, date, setDate, checkboxes, setCheckboxes, selectAllCheckboxes, isDataRegistered, deselectAllCheckboxes } = useMonitoringData(formattedDate);
 
   const dateWithDay = `${date} (${getDayOfWeek(date)})`;
 
@@ -130,6 +130,7 @@ export default function MonitoringForm() {
         <span className={styles.dateHeader}>{dateWithDay}</span>
         <button onClick={incrementDate}>＞</button>
         <button onClick={selectAllCheckboxes}>全選択</button>
+        <button onClick={deselectAllCheckboxes}>解除</button>
         <button onClick={submitData}>{isDataRegistered ? '更新' : '送信'}</button>
       </div>
       <table className={styles.table}>
