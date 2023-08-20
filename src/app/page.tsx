@@ -91,10 +91,19 @@ async function sendData(payloads, accessToken, isDataRegistered) {
   alert(isDataRegistered ? '更新が完了しました。' : '送信が完了しました。'); // メッセージも動的に変更
 }
 
+// 曜日を取得するためのヘルパー関数
+const getDayOfWeek = (dateString) => {
+  const daysOfWeek = ['日', '月', '火', '水', '木', '金', '土'];
+  const dateObj = new Date(dateString);
+  return daysOfWeek[dateObj.getDay()];
+};
+
 export default function MonitoringForm() {
   const currentDate = new Date();
   const formattedDate = `${currentDate.getFullYear()}/${String(currentDate.getMonth() + 1).padStart(2, '0')}/${String(currentDate.getDate()).padStart(2, '0')}`;
   const { accessToken, date, setDate, checkboxes, setCheckboxes, selectAllCheckboxes, isDataRegistered } = useMonitoringData(formattedDate);
+
+  const dateWithDay = `${date} (${getDayOfWeek(date)})`;
 
   // 日付を進める
   const incrementDate = () => {
@@ -118,7 +127,7 @@ export default function MonitoringForm() {
     <div className={styles.bodyWrapper}>
       <div className={styles.header}>
         <button onClick={decrementDate}>＜</button>
-        <span className={styles.dateHeader}>{date}</span>
+        <span className={styles.dateHeader}>{dateWithDay}</span>
         <button onClick={incrementDate}>＞</button>
         <button onClick={selectAllCheckboxes}>全選択</button>
         <button onClick={submitData}>{isDataRegistered ? '更新' : '送信'}</button>
