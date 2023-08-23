@@ -33,8 +33,8 @@ export default function ReportDetailPage() {
           },
         });
 
-          const data = await response.json();
-          setReportData(data);
+        const data = await response.json();
+        setReportData(data);
 
       } catch (error) {
         console.error("There was an error fetching the data", error);
@@ -45,10 +45,10 @@ export default function ReportDetailPage() {
   }, [dateYear, accessToken]);
 
   return (
-    <>
+    <div style={{ margin: '0 auto', maxWidth: '1200px', padding: '0 20px' }}>
       <h1>{year}年{month}月のサーバー監視記録</h1>
       <ReportTable data={reportData} />
-    </>
+    </div>
   )
 }
 
