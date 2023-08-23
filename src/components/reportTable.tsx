@@ -18,6 +18,9 @@ interface DataTableProps {
   data: ServerData;
 }
 
+// 文字列の "true" を true に、"false" を false に変換するヘルパー関数
+const stringToBoolean = (str) => str === "true";
+
 export default function ReportTable({ data }: DataTableProps) {
   if (!data) return <div>No data available.</div>;
 
@@ -42,10 +45,9 @@ export default function ReportTable({ data }: DataTableProps) {
                   records.map((record, idx) => (
                     <tr key={idx}>
                       <td>{record.record_date}</td>
-
-                      <td>{record.is_backup_completed ? 'OK' : 'NG'}</td>
-                      <td>{record.is_not_alert ? 'OK' : 'NG'}</td>
-                      <td>{record.is_working ? 'OK' : 'NG'}</td>
+                      <td>{stringToBoolean(record.is_backup_completed) ? 'OK' : 'NG'}</td>
+                      <td>{stringToBoolean(record.is_not_alert) ? 'OK' : 'NG'}</td>
+                      <td>{stringToBoolean(record.is_working) ? 'OK' : 'NG'}</td>
                       <td>{record.user.username}</td>
                     </tr>
                   ))
@@ -58,7 +60,7 @@ export default function ReportTable({ data }: DataTableProps) {
             </table>
           </div>
         ))}
-      </div>
+      </div >
       <style jsx>{`
     .body-wrapper {
       margin-right: 20px;
