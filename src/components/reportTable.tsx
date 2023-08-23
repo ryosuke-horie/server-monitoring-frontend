@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 type ServerRecord = {
   is_backup_completed: boolean;
@@ -24,12 +24,32 @@ const stringToBoolean = (str) => str === "true";
 export default function ReportTable({ data }: DataTableProps) {
   if (!data) return <div>No data available.</div>;
 
+  // 各サーバーの表示状態を管理するステート
+  const [shownServer, setShownServer] = useState<string | null>(null);
+
+
+  // サーバー名をトグルする関数
+  const toggleServer = (serverName: string) => {
+    if (shownServer === serverName) {
+      setShownServer(null);
+    } else {
+      setShownServer(serverName);
+    }
+  };
+
   return (
     <>
       <div>
         {Object.entries(data).map(([server, records]) => (
           <div key={server}>
-            <h2>{server}</h2>
+            <div className="header">
+              <h2>{server}</h2>
+              {records.length > 5 && (
+                <button onClick={() => toggleServer(server)}>
+                  {shownServer === server ? '表示を縮小' : 'もっと見る'}
+                </button>
+              )}
+            </div>
             <table>
               <thead>
                 <tr>
@@ -42,7 +62,7 @@ export default function ReportTable({ data }: DataTableProps) {
               </thead>
               <tbody>
                 {records.length > 0 ? (
-                  records.map((record, idx) => (
+                  (shownServer === server ? records : records.slice(0, 5)).map((record, idx) => (
                     <tr key={idx}>
                       <td>{record.record_date}</td>
                       <td>{stringToBoolean(record.is_backup_completed) ? 'OK' : 'NG'}</td>
