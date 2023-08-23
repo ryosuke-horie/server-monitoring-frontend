@@ -22,11 +22,10 @@ interface DataTableProps {
 const stringToBoolean = (str) => str === "true";
 
 export default function ReportTable({ data }: DataTableProps) {
-  if (!data) return <div>No data available.</div>;
-
   // 各サーバーの表示状態を管理するステート
   const [shownServer, setShownServer] = useState<string | null>(null);
 
+  if (!data) return <div>No data available.</div>;
 
   // サーバー名をトグルする関数
   const toggleServer = (serverName: string) => {
