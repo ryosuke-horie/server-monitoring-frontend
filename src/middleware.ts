@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 
 // IPホワイトリスト
-const IP_WHITELIST = ['60.65.237.227'];
+const IP_WHITELIST = ['60.65.237.227', '54.199.212.225'];
 
 export async function middleware(request: NextRequest) {
   const res = NextResponse.next();
