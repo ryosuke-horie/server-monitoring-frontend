@@ -1,16 +1,29 @@
 import { NextRequest, NextResponse } from 'next/server'
 
-// あなたのIPホワイトリスト
+// IPホワイトリスト
 const IP_WHITELIST = ['60.65.237.227'];
 
-export default async function middleware(req: NextRequest) {
-  const clientIP = req.headers['x-forwarded-for'] || req.headers['x-real-ip'];
+export async function middleware(request: NextRequest) {
+  const res = NextResponse.next();
 
-  console.log(clientIP);
+  // ipアドレスを取得
+  let ip: string = request.ip ?? request.headers.get('x-real-ip') ?? '';
 
-  if (!IP_WHITELIST.includes(clientIP)) {
-    return NextResponse.redirect('https://server-monitoring-prototype.vercel.app/access-denied'); // アクセス拒否のページにリダイレクト
+  // プロキシ経由の場合
+  const forwardedFor = request.headers.get('x-forwarded-for')
+
+  // プロキシ経由の場合は、プロキシのIPアドレスを取得
+  if(!ip && forwardedFor){
+    ip = forwardedFor.split(',').at(0) ?? 'Unknown'
   }
 
-  return NextResponse.next();
+  // 取得したIPアドレスをログに出力
+    console.log(ip)
+
+  // 取得したIPアドレスがホワイトリストに含まれているかチェックし、含まれていない場合はアクセス拒否
+    if(!IP_WHITELIST.includes(ip)){
+        return NextResponse.redirect('https://server-monitoring-prototype.vercel.app/access-denied'); // アクセス拒否のページにリダイレクト
+    }
+
+  return res;
 }
