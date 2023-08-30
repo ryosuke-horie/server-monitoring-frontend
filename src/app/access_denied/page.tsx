@@ -1,3 +1,5 @@
+import React from 'react'
+
 export default function AccessDenied() {
     return (
         <div style={{ margin: '0 auto', maxWidth: '1200px', padding: '0 20px' }}>
