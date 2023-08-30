@@ -17,13 +17,10 @@ export async function middleware(request: NextRequest) {
     ip = forwardedFor.split(',').at(0) ?? 'Unknown'
   }
 
-  // 取得したIPアドレスをログに出力
-    console.log(ip)
-
   // 取得したIPアドレスがホワイトリストに含まれているかチェックし、含まれていない場合はアクセス拒否
-    if(!IP_WHITELIST.includes(ip)){
-        return NextResponse.redirect('https://server-monitoring-prototype.vercel.app/access-denied'); // アクセス拒否のページにリダイレクト
-    }
+  if(!IP_WHITELIST.includes(ip)){
+    return NextResponse.redirect('https://server-monitoring-prototype.vercel.app/access-denied'); // アクセス拒否のページにリダイレクト
+  }
 
   return res;
 }
