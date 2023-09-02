@@ -1,10 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server'
 
 // IPホワイトリスト
-const IP_WHITELIST = ['60.65.237.227', '54.199.212.225'];
+const IP_WHITELIST = ['60.65.237.227', '54.199.212.225', '172.31.3.236', '172.31.3.177', '172.31.3.189', '54.168.15.135'];
 
 export async function middleware(request: NextRequest) {
   const res = NextResponse.next();
+
+  // access-deniedページにはミドルウェアを適用しない
+  if(request.nextUrl.pathname === '/access-denied'){
+    return res;
+  }
 
   // ipアドレスを取得
   let ip: string = request.ip ?? request.headers.get('x-real-ip') ?? '';
