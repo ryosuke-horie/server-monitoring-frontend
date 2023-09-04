@@ -3,6 +3,9 @@ import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import ReportTable from "../../components/reportTable";
 
+/**
+ * 月別レポート詳細ページ
+ */
 export default function ReportDetailPage() {
   const [accessToken, setAccessToken] = useState(null);
   const [reportData, setReportData] = useState(null);
