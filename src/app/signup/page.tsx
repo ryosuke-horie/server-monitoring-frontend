@@ -19,7 +19,6 @@ const defaultTheme = createTheme();
 /**
  * サインアップページ
  * @see https://mui.com/getting-started/templates/sign-up/
- * TODO: バリデーション作成
  */
 export default function SignUp() {
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
