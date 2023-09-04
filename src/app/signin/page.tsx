@@ -16,6 +16,11 @@ import axios from 'axios';
 
 const defaultTheme = createTheme();
 
+/**
+ * サインインページ
+ * 成功時はTOPページへリダイレクト
+ * 失敗時はアラートでエラー表示
+ */
 export default function SignIn() {
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
